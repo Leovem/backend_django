@@ -17,7 +17,8 @@ class CatalogoProductosView(APIView):
             productos_data = [{
                 "nombre": producto.nombre,
                 "descripcion": producto.descripcion,
-                "precio": producto.precio
+                "precio": producto.precio,
+                "imagen_url": producto.imagen_url
             } for producto in productos]
             return Response(productos_data, status=status.HTTP_200_OK)
         except Exception as e:

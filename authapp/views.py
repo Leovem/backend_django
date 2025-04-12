@@ -26,8 +26,8 @@ class LoginView(APIView):
                 refresh = RefreshToken.for_user(user)
                 return Response({
                     "mensaje": "Inicio de sesión exitoso",
-                    "refresh": str(refresh),
-                    "access": str(refresh.access_token)
+                    "Token refresh": str(refresh),
+                    "Token access": str(refresh.access_token)
                 })
             else:
                 return Response({"error": "Credenciales incorrectas"}, status=status.HTTP_401_UNAUTHORIZED)
