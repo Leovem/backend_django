@@ -30,8 +30,10 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'authapp',
     'productsCart',
-    
+    'cart',
     'corsheaders',
+    'orders',
+    #'ordersCart',
 ]
 
 REST_FRAMEWORK = {
