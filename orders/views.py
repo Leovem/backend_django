@@ -4,6 +4,7 @@ from rest_framework import status
 from .models import Pedido, PedidoDetalle, Envio, MetodoPago, Pago
 from authapp.models import Usuario
 from productsCart.models import Producto
+from cart.models import Carrito, CarritoItem
 from datetime import timedelta
 from django.utils import timezone
 
@@ -103,3 +104,83 @@ def confirmar_pago(request):
         'estado_pedido': pedido.estado,
         'estado_pago': pago.estado
     }, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def comprar_carrito(request):
+    usuario_id = request.data.get('usuario_id')
+    metodo_pago_id = request.data.get('metodo_pago_id')
+    direccion_envio = request.data.get('direccion_envio')
+    tipo_entrega = request.data.get('tipo_entrega', 'estándar')
+
+    if not usuario_id or not metodo_pago_id or not direccion_envio:
+        return Response({'detail': 'Faltan datos'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        usuario = Usuario.objects.get(id=usuario_id)
+        metodo_pago = MetodoPago.objects.get(id=metodo_pago_id)
+        carrito = Carrito.objects.get(usuario=usuario)
+        items = CarritoItem.objects.filter(carrito=carrito)
+    except Usuario.DoesNotExist:
+        return Response({'detail': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+    except MetodoPago.DoesNotExist:
+        return Response({'detail': 'Método de pago no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+    except Carrito.DoesNotExist:
+        return Response({'detail': 'Carrito no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+    if not items:
+        return Response({'detail': 'El carrito está vacío'}, status=status.HTTP_400_BAD_REQUEST)
+
+    total = 0
+    for item in items:
+        total += item.producto.precio * item.cantidad
+
+    pedido = Pedido.objects.create(
+        usuario=usuario,
+        estado='pendiente',
+        total=total
+    )
+
+    for item in items:
+        PedidoDetalle.objects.create(
+            pedido=pedido,
+            producto=item.producto,
+            cantidad=item.cantidad,
+            precio_unitario=item.producto.precio
+        )
+
+        # Descontar del stock
+        item.producto.stock -= item.cantidad
+        item.producto.save()
+
+    pago = Pago.objects.create(
+        pedido=pedido,
+        metodo_pago=metodo_pago,
+        estado='pendiente',
+        monto=total
+    )
+
+    fecha_entrega_estimada = timezone.now() + timedelta(days=3)
+
+    envio = Envio.objects.create(
+        pedido=pedido,
+        direccion_envio=direccion_envio,
+        tipo_entrega=tipo_entrega,
+        estado_envio='pendiente',
+        fecha_entrega_estimada=fecha_entrega_estimada
+    )
+
+    # Limpiar el carrito del usuario
+    items.delete()
+
+    return Response({
+        'pedido_id': pedido.id,
+        'total': total,
+        'estado_pedido': pedido.estado,
+        'pago_id': pago.id,
+        'estado_pago': pago.estado,
+        'metodo_pago': metodo_pago.tipo,
+        'envio_id': envio.id,
+        'direccion_envio': envio.direccion_envio,
+        'fecha_estimada_entrega': envio.fecha_entrega_estimada
+    }, status=status.HTTP_201_CREATED)

@@ -47,3 +47,33 @@ def agregar_producto_al_carrito(request):
         'producto_id': producto.id,
         'cantidad': carrito_item.cantidad,
     }, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def obtener_carrito_usuario(request, usuario_id):
+    # Verificamos que el usuario exista
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+    # Intentamos obtener el carrito del usuario
+    try:
+        carrito = Carrito.objects.get(usuario=usuario)
+    except Carrito.DoesNotExist:
+        return Response({'detail': 'El usuario no tiene un carrito'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Obtenemos todos los ítems del carrito
+    items = CarritoItem.objects.filter(carrito=carrito)
+
+    # Serializamos manualmente los datos (puedes usar un serializer si tienes)
+    productos_en_carrito = []
+    for item in items:
+        productos_en_carrito.append({
+            'producto_id': item.producto.id,
+            'nombre': item.producto.nombre,
+            'precio': item.producto.precio,
+            'cantidad': item.cantidad
+        })
+
+    return Response({
+        'carrito_id': carrito.id,
+        'usuario_id': usuario.id,
+        'productos': productos_en_carrito
+    }, status=status.HTTP_200_OK)
