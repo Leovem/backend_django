@@ -15,6 +15,7 @@ class CatalogoProductosView(APIView):
         try:
             productos = Producto.objects.all()
             productos_data = [{
+                "id": producto.id,
                 "nombre": producto.nombre,
                 "descripcion": producto.descripcion,
                 "precio": producto.precio,
