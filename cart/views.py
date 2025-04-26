@@ -77,3 +77,30 @@ def obtener_carrito_usuario(request, usuario_id):
         'usuario_id': usuario.id,
         'productos': productos_en_carrito
     }, status=status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+def eliminar_producto_del_carrito(request):
+    usuario_id = request.data.get('usuario_id')
+    producto_id = request.data.get('producto_id')
+
+    # Validación de datos
+    if not usuario_id or not producto_id:
+        return Response({'detail': 'Faltan datos necesarios'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Obtener el usuario
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+    # Obtener el carrito del usuario
+    try:
+        carrito = Carrito.objects.get(usuario=usuario)
+    except Carrito.DoesNotExist:
+        return Response({'detail': 'El carrito no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Buscar el item del producto dentro del carrito
+    try:
+        carrito_item = CarritoItem.objects.get(carrito=carrito, producto__id=producto_id)
+        carrito_item.delete()
+        return Response({'detail': 'Producto eliminado del carrito'}, status=status.HTTP_200_OK)
+    except CarritoItem.DoesNotExist:
+        return Response({'detail': 'Producto no encontrado en el carrito'}, status=status.HTTP_404_NOT_FOUND)
