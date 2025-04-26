@@ -32,6 +32,7 @@ class Pago(models.Model):
     estado = models.CharField(max_length=50)
     fecha = models.DateTimeField(auto_now_add=True)
     monto = models.DecimalField(max_digits=10, decimal_places=2)
+    paypal_payment_id = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         db_table = 'pagos'

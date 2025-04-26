@@ -16,7 +16,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+# PayPal settings
+PAYPAL_MODE = 'sandbox'  # 'live' para producción
+PAYPAL_CLIENT_ID = 'AXCLlcVQ6Hmz3g1v6MADNY84KS5ylN7chAwmmvKuxcu_I0Nh7ZIjo9NbImCtnjeqd53vMU79hFGaRvSX'
+PAYPAL_CLIENT_SECRET = 'EP-XvNCdgj4iYNxrJkMXY7dv8coIO9u3NRh9tnZN8kgMlnuQD5mzeJn1Na1ohxzCimgoye6zf4lM_st7'
 # Application definition
 
 INSTALLED_APPS = [
@@ -33,6 +36,7 @@ INSTALLED_APPS = [
     'cart',
     'corsheaders',
     'orders',
+    'payment',
     #'ordersCart',
 ]
 
