@@ -6,13 +6,14 @@ from rest_framework import status
 from orders.views import Pago
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
+from django.conf import settings
 
 
 # Configuración PayPal Sandbox
 paypalrestsdk.configure({
-    "mode": "sandbox",  # Cambiar a "live" para producción
-    "client_id": "TU_CLIENT_ID",
-    "client_secret": "TU_CLIENT_SECRET"
+    "mode": settings.PAYPAL_MODE,
+    "client_id": settings.PAYPAL_CLIENT_ID,
+    "client_secret": settings.PAYPAL_CLIENT_SECRET,
 })
 
 @api_view(['POST'])
