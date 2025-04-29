@@ -14,7 +14,9 @@ SECRET_KEY = 'django-insecure-w$falhvn@hz@15!-t7w+)+veotaf$o2*^r7&o666zv&u03xgp5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.1.11']
+
 
 # PayPal settings
 PAYPAL_MODE = 'sandbox'  # 'live' para producción
