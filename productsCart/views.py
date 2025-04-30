@@ -20,6 +20,7 @@ class CatalogoProductosView(APIView):
                 "nombre": producto.nombre,
                 "descripcion": producto.descripcion,
                 "precio": producto.precio,
+                "stock" : producto.stock,
                 "imagen_url": producto.imagen_url
             } for producto in productos]
             return Response(productos_data, status=status.HTTP_200_OK)

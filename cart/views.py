@@ -68,6 +68,7 @@ def obtener_carrito_usuario(request, usuario_id):
         productos_en_carrito.append({
             'producto_id': item.producto.id,
             'nombre': item.producto.nombre,
+            'imagen_url': item.producto.imagen_url,
             'precio': item.producto.precio,
             'cantidad': item.cantidad
         })
