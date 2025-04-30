@@ -20,8 +20,8 @@ ALLOWED_HOSTS = ['*']
 
 # PayPal settings
 PAYPAL_MODE = 'sandbox'  # 'live' para producción
-PAYPAL_CLIENT_ID = 'AXCLlcVQ6Hmz3g1v6MADNY84KS5ylN7chAwmmvKuxcu_I0Nh7ZIjo9NbImCtnjeqd53vMU79hFGaRvSX'
-PAYPAL_CLIENT_SECRET = 'EP-XvNCdgj4iYNxrJkMXY7dv8coIO9u3NRh9tnZN8kgMlnuQD5mzeJn1Na1ohxzCimgoye6zf4lM_st7'
+PAYPAL_CLIENT_ID = 'AZJG09GX8UElC1iSU7dH-zyI5kXG_6yyJvkdhAbGDUGOevtOrqkAaJMLkfxZixCttEsSSPZAJQgThIgl'
+PAYPAL_CLIENT_SECRET = 'EK3_-ATLHcjBDJ_1OjE8Ovkbq6k6plN8x91oXBOw8I-p_y_7Rl-4_RcttOXRGvCbTM8yAaSfydnHV8mL'
 # Application definition
 
 INSTALLED_APPS = [
